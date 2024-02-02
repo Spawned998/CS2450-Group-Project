@@ -2,4 +2,8 @@
 
 #did this add to main now?
 
-main():
+def main():
+    print("hello world")
+
+if __name__ == "__main__":
+    main()
