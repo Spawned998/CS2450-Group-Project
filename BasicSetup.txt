@@ -1,0 +1,13 @@
+Steps for setting up Git
+	1. Installed from www.git-scm.com
+	2. During installe keep defaults, but change default text editor from VIM to VSCode
+    3. Created a local folder on my PC for storing work
+    4. Opened Git Bash inside folder (In file explorer, right click anywhere, Git Bash here)
+    5. Setup Name Configuration:
+        $ git config --global user.name "Your Name Here"
+    6. Setup Email Configuration:
+        $ git config --global user.email youremail.domain.com
+    7. Clone remote repository to local copy
+        $git clone https://github.com/Spawned998/CS2450-Group-Project.git
+
+    -That should be enough to get started.  Helpful video here: https://www.youtube.com/watch?v=tRZGeaHPoaw    
