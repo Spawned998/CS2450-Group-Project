@@ -5,10 +5,11 @@ class UVSimulator:
         self.accumulator = 0
         self.instruction_counter = 0
 
-    def load_program(self, program):
-        # Load BasicML program into memory starting at location 00
-        for i in range(len(program)):
-            self.memory[i] = program[i]
+    def load_program_from_file(self, filename):
+        # Load BasicML program from a text file into memory starting at location 00
+        with open(filename, 'r') as file:
+            program = [int(line.strip()) for line in file]
+        self.memory[:len(program)] = program
 
     def execute_program(self):
         # Execute BasicML program
@@ -62,19 +63,12 @@ class UVSimulator:
 
             elif opcode == 43:  # HALT
                 print("Program halted.")
-                print(program)
                 break
 
             self.instruction_counter += 1
 
-# Example program to demonstrate the UVSimulator
-program = [+1007, +2010, +3011, +1100, +4300]
-
-# Create UVSimulator instance
+# Example usage
+filename = "Test1.txt"
 uvsim = UVSimulator()
-
-# Load program into UVSimulator memory
-uvsim.load_program(program)
-
-# Execute program
+uvsim.load_program_from_file(filename)
 uvsim.execute_program()
