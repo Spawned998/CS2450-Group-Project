@@ -76,9 +76,6 @@ class UVSimulator:
         print(self.program)
         self.load_program()
         self.execute_program()
-        print(self.memory)
-        print(self.instruction_counter)
-        print(self.accumulator)
 
     def read_file(self):
         #reads the file
