@@ -1,0 +1,6 @@
+100     ; Read a value from input and store it in memory location 00
+200     ; Load the value from memory location 00 into the accumulator
+301     ; Subtract the value from memory location 01 from the accumulator
+410     ; Branch to memory location 10 if the accumulator is negative
+111     ; Write the value from memory location 11 to output
+430     ; Halt the program
