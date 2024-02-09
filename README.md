@@ -10,6 +10,7 @@ Simply run the python file. All commands are given using the commmand line. Curr
 Currently implemented file commands:
 
 Read = 10 - Prompts user to input a command from command line.
+
 Write = 11 - Displays a word from the specified memory location onto the screen. The specified memory location is the last 2 digits of a word.
 Load = 20 - Load a word from a specific memory location to the accumulator.
 Store = 21 - Store a word from the accumulator into a specific location. 
