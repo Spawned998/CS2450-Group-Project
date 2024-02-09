@@ -1,4 +1,5 @@
 class UVSimulator:
+    #virtual machine
     def __init__(self):
         # Initialize UVSim components
         self.program = []
