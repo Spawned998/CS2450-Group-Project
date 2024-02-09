@@ -1,14 +1,16 @@
 class UVSimulator:
     def __init__(self):
         # Initialize UVSim components
+        self.program = []
         self.memory = [0] * 100
         self.accumulator = 0
         self.instruction_counter = 0
+        self.file = ""
 
-    def load_program(self, program):
+    def load_program(self):
         # Load BasicML program into memory starting at location 00
-        for i in range(len(program)):
-            self.memory[i] = program[i]
+        for i in range(len(self.program)):
+            self.memory[i] = self.program[i]
 
     def execute_program(self):
         # Execute BasicML program
@@ -62,19 +64,36 @@ class UVSimulator:
 
             elif opcode == 43:  # HALT
                 print("Program halted.")
-                print(program)
+                print(self.program)
                 break
 
             self.instruction_counter += 1
 
+    def user_interface(self):
+        #gives the user interface
+        self.file =input("Welcome to UVSIM. Please enter your file: ")
+        self.read_file()
+        print(self.program)
+        self.load_program()
+        self.execute_program()
+        print(self.memory)
+        print(self.instruction_counter)
+        print(self.accumulator)
+
+    def read_file(self):
+        #reads the file
+        with open(self.file, 'r') as file:
+            for line in file:
+                self.program.append(int(line))
+        
+
+
 # Example program to demonstrate the UVSimulator
-program = [+1007, +2010, +3011, +1100, +4300]
 
-# Create UVSimulator instance
-uvsim = UVSimulator()
+def main():
+    # Create UVSimulator instance
+    uvsim = UVSimulator()
+    uvsim.user_interface()
 
-# Load program into UVSimulator memory
-uvsim.load_program(program)
-
-# Execute program
-uvsim.execute_program()
+if __name__ == "__main__":
+    main()
