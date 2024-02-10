@@ -7,23 +7,31 @@ class UVSimulator:
 
     def load_program_from_file(self, filename):
         # Load BasicML program from a text file into memory starting at location 00
-        with open(filename, 'r') as file:
-            program = [int(line.strip()) for line in file]
-        self.memory[:len(program)] = program
+        try:
+            with open(filename, 'r') as file:
+                program = [int(line.strip()) for line in file]
+            self.memory[:len(program)] = program
+            return True
+            
+        except Exception as e:
+            print('No file found.')
+            return False
 
     def user_interface(self):
         #gives the user interface
+        print('Welcome to UVSIM!')
         while True:
-            print('Welcome to UVSIM. Enter "exit" to close program')
-            file = input("Please enter your file: ")
+            file = input('\nEnter your BasicML filename(type exit to close): ')
             if file.lower() == "exit":
                 break
             else:
-                self.load_program_from_file(file)
+                load_successful = self.load_program_from_file(file)
+            
+            if (load_successful):
                 self.execute_program()
-                self.user_interface()
+                return
                 #remove before turning in, this is for testing
-                print(self.memory)
+                #print(self.memory)
 
     def execute_program(self, max_iterations = 100):
         # Execute BasicML program
