@@ -1,3 +1,6 @@
+from math import e
+
+
 class UVSimulator:
     def __init__(self):
         # Initialize UVSim components
@@ -33,6 +36,27 @@ class UVSimulator:
                 #remove before turning in, this is for testing
                 #print(self.memory)
 
+    def verify_input(self):
+        #Verify the user enters a digit - reject all other inputs.
+        isValid = False
+        user_entry = ""
+        
+        while(isValid == False):
+            
+            user_entry = (input("Enter a value: "))
+            
+            try:
+                user_entry = int(user_entry)
+                
+            except Exception as e:
+                print("Invalid input. Please enter a numerical value.")
+                
+            else:
+                isValid = True
+                
+        return user_entry
+                
+
     def execute_program(self, max_iterations = 100):
         # Execute BasicML program
         while (self.instruction_counter < max_iterations):
@@ -41,7 +65,7 @@ class UVSimulator:
             operand = instruction % 100
 
             if opcode == 10:  # READ
-                value = int(input("Enter a value: "))
+                value = self.verify_input()
                 self.memory[operand] = value
 
             elif opcode == 11:  # WRITE
@@ -85,6 +109,13 @@ class UVSimulator:
 
             elif opcode == 43:  # HALT
                 print("Program halted.")
+                print("Exiting program.")
+                break
+            
+            else:
+                #Invalid opcode
+                print(f"Invalid opcode: {opcode} is not a valid command.")
+                print("Exiting program.")
                 break
 
             self.instruction_counter += 1
