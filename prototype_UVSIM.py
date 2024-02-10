@@ -109,7 +109,6 @@ class UVSimulator:
 
             elif opcode == 43:  # HALT
                 print("Program halted.")
-                print("Exiting program.")
                 break
             
             else:

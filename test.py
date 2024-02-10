@@ -29,7 +29,7 @@ class TestUVSimulator(unittest.TestCase):
   def test_execute_program_write(self, mock_stdout):
     self.uvsim.memory[0] = 1105
     self.uvsim.memory[5] = 10
-    self.uvsim.execute_program()
+    self.uvsim.execute_program(1)
     self.assertEqual(mock_stdout.getvalue().strip(), "Output: 10")
 
   def test_execute_program_branch(self):
