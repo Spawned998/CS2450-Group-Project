@@ -22,6 +22,8 @@ class UVSimulator:
                 self.load_program_from_file(file)
                 self.execute_program()
                 self.user_interface()
+                #remove before turning in, this is for testing
+                print(self.memory)
 
     def execute_program(self):
         # Execute BasicML program
