@@ -11,18 +11,18 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim = UVSimulator()
 
   def test_load_program_from_file(self):
-    filename = "Test1.txt"
+    filename = "Test_Load.txt"
     program_content = "1010\n2009\n4300"
     with open(filename, "w") as file:
       file.write(program_content)
     self.uvsim.load_program_from_file(filename)
-    self.assertEqual(self.uvsim.memory[:3], [10, 9, 43])
+    self.assertEqual(self.uvsim.memory[:3], [1010, 2009, 4300])
     os.remove(filename)
 
   @patch('builtins.input', side_effect=[5])
   def test_execute_program_write(self, mock_input):
     self.uvsim.memory[0] = 1005 
-    self.uvsim.execute_program()
+    self.uvsim.execute_program(1)
     self.assertEqual(self.uvsim.memory[5], 5)
 
   @patch('sys.stdout', new_callable=StringIO)
@@ -34,8 +34,8 @@ class TestUVSimulator(unittest.TestCase):
 
   def test_execute_program_branch(self):
     self.uvsim.memory[0] = 4005
-    self.uvsim.execute_program()
-    self.assertEqual(self.uvsim.instruction_count, 5)
+    self.uvsim.execute_program(1)
+    self.assertEqual(self.uvsim.instruction_counter, 5)
 
   def test_execute_program_halt(self):
     self.uvsim.memory[0] = 4300

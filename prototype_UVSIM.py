@@ -25,9 +25,9 @@ class UVSimulator:
                 #remove before turning in, this is for testing
                 print(self.memory)
 
-    def execute_program(self):
+    def execute_program(self, max_iterations = 100):
         # Execute BasicML program
-        while True:
+        while (self.instruction_counter < max_iterations):
             instruction = self.memory[self.instruction_counter]
             opcode = instruction // 100
             operand = instruction % 100
