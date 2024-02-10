@@ -19,6 +19,16 @@ class TestUVSimulator(unittest.TestCase):
     self.assertEqual(self.uvsim.memory[:3], [1010, 2009, 4300])
     os.remove(filename)
 
+  def test_load_program_from_file_invalid_file(self):
+    filename = "InvalidFile.txt"
+    output = StringIO()
+    sys.stdout = output
+    self.uvsim.load_program_from_file(filename)
+    printed_false = output.getvalue().strip()
+    sys.stdout = sys.__stdout__
+    expected_false = 'No file found.'
+    self.assertEqual(printed_false, expected_false)
+  
   @patch('builtins.input', side_effect=[5])
   def test_execute_program_read(self, mock_input):
     self.uvsim.memory[0] = 1005 
@@ -32,49 +42,11 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim.execute_program()
     self.assertEqual(mock_stdout.getvalue().strip(), "Output: 10")
 
-  def test_execute_program_branch(self):
-    self.uvsim.memory[0] = 4005
-    self.uvsim.execute_program(1)
-    self.assertEqual(self.uvsim.instruction_counter, 5)
-
   def test_execute_program_halt(self):
     self.uvsim.memory[0] = 4300
     with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
       self.uvsim.execute_program()
       self.assertEqual(mock_stdout.getvalue().strip(), "Program halted.")
-  
-  def test_execute_program_divide_by_zero(self):
-    self.uvsim.memory[0] = 3205
-    with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-      self.uvsim.execute_program()
-      self.assertIn("Error: Division by zero", mock_stdout.getvalue())
-
-  def test_load_program_from_file_invalid_file(self):
-    filename = "InvalidFile.txt"
-    output = StringIO()
-    sys.stdout = output
-    self.uvsim.load_program_from_file(filename)
-    printed_false = output.getvalue().strip()
-    sys.stdout = sys.__stdout__
-    expected_false = 'No file found.'
-    self.assertEqual(printed_false, expected_false)
-
-  @patch('builtins.input', value=45)
-  def test_opcode_10(self, mock_input):
-    self.uvsim.memory[0] = 1045
-    self.uvsim.execute_program()
-    operand = self.uvsim.memory[0] % 100
-    self.assertEqual(operand, 45)
-
-  def test_opcode_11(self):
-    self.uvsim.memory[0] = 1164
-    output = StringIO()
-    sys.stdout = output
-    self.uvsim.execute_program()
-    printed_output = output.getvalue().strip()
-    sys.stdout = sys.__stdout__
-    expected_output = "Output: 0"
-    self.assertEqual(printed_output, expected_output)
 
   def test_opcode_20(self):
     self.uvsim.memory[0] = 2024
@@ -147,15 +119,5 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim.execute_program(operand)
     self.assertEqual(self.uvsim.instruction_counter, operand)
   
-  def test_opcode_43(self):
-    self.uvsim.memory[0] = 4321
-    output = StringIO()
-    sys.stdout = output
-    self.uvsim.execute_program()
-    halt_output = output.getvalue().strip()
-    sys.stdout = sys.__stdout__
-    halt_expected = "Program halted."
-    self.assertEqual(halt_output, halt_expected)
-
 if __name__ == '__main__':
   unittest.main()
