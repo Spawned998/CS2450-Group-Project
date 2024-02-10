@@ -11,6 +11,18 @@ class UVSimulator:
             program = [int(line.strip()) for line in file]
         self.memory[:len(program)] = program
 
+    def user_interface(self):
+        #gives the user interface
+        while True:
+            print('Welcome to UVSIM. Enter "exit" to close program')
+            file = input("Please enter your file: ")
+            if file.lower() == "exit":
+                break
+            else:
+                self.load_program_from_file(file)
+                self.execute_program()
+                self.user_interface()
+
     def execute_program(self):
         # Execute BasicML program
         while True:
@@ -67,8 +79,9 @@ class UVSimulator:
 
             self.instruction_counter += 1
 
-# Example usage
-filename = "Test1.txt"
-uvsim = UVSimulator()
-uvsim.load_program_from_file(filename)
-uvsim.execute_program()
+def main():
+    uvsim = UVSimulator()
+    uvsim.user_interface()
+
+if __name__=="__main__":
+    main()
