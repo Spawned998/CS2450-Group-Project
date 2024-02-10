@@ -61,6 +61,10 @@ class UVSimulator:
         # Execute BasicML program
         while (self.instruction_counter < max_iterations):
             instruction = self.memory[self.instruction_counter]
+            if instruction == -99999:
+                print("End of file.")
+                break
+
             opcode = instruction // 100
             operand = instruction % 100
 
