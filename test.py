@@ -18,7 +18,7 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim.load_program_from_file(filename)
     self.assertEqual(self.uvsim.memory[:3], [1010, 2009, 4300])
     os.remove(filename)
-
+  
   def test_load_program_from_file_invalid_file(self):
     filename = "InvalidFile.txt"
     output = StringIO()
@@ -28,7 +28,27 @@ class TestUVSimulator(unittest.TestCase):
     sys.stdout = sys.__stdout__
     expected_false = 'No file found.'
     self.assertEqual(printed_false, expected_false)
-  
+    
+  @patch('builtins.input', side_effect=["Test1.txt"])
+  @patch('builtins.print')
+  def test_user_interface_prints_welcome(self, mock_print, mock_input):
+    with patch('builtins.input', side_effect=["exit"]):
+      self.uvsim.user_interface()
+    mock_print.assert_called_with('Welcome to UVSIM!')
+    
+  @patch('builtins.input', side_effect=["exit"])
+  def test_user_interface_breaks_on_exit(self, mock_input):
+    self.uvsim.user_interface()
+    self.assertRaises(SystemExit)
+    
+  @patch('builtins.input', side_effect=["test1.txt", "exit"])
+  def test_user_interface_loads_and_executes_program(self, mock_input):
+    with patch.object(UVSimulator, 'load_program_from_file') as mock_load_program:
+      with patch.object(UVSimulator, 'execute_program') as mock_execute_program:
+        self.uvsim.user_interface()
+        mock_load_program.assert_called_with("test1.txt")
+        mock_execute_program.assert_called_once()
+
   @patch('builtins.input', side_effect=[5])
   def test_execute_program_read(self, mock_input):
     self.uvsim.memory[0] = 1005 
@@ -47,6 +67,25 @@ class TestUVSimulator(unittest.TestCase):
     with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
       self.uvsim.execute_program()
       self.assertEqual(mock_stdout.getvalue().strip(), "Program halted.")
+  
+  @patch('builtins.input', side_effect=['10'])
+  def test_verify_input_valid_input(self, mock_input):
+    with patch('sys.stdout', new=StringIO()) as mock_stdout:
+      result = self.uvsim.verify_input()
+      self.assertEqual(result, 10)
+
+  @patch('builtins.input', side_effect=['abc', '5'])
+  def test_verify_input_then_invalid_input(self, mock_input):
+    with patch('sys.stdout', new=StringIO()) as mock_stdout:
+      result = self.uvsim.verify_input()
+      self.assertEqual(result, 5)
+
+  @patch('builtins.input', side_effect=['', '8'])
+  def test_verify_input_empty_then_valid_input(self, mock_input):
+    with patch('sys.stdout', new=StringIO()) as mock_stdout:
+      result = self.uvsim.verify_input()
+      self.assertEqual(result, 8)
+
 
   def test_opcode_20(self):
     self.uvsim.memory[0] = 2024
@@ -116,8 +155,8 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim.memory[0] = 4202
     self.uvsim.accumulator = 0
     operand = 2
-    self.uvsim.execute_program(operand)
+    self.uvsim.execute_program(operand) 
     self.assertEqual(self.uvsim.instruction_counter, operand)
-  
+    
 if __name__ == '__main__':
   unittest.main()
