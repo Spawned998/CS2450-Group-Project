@@ -20,7 +20,7 @@ class TestUVSimulator(unittest.TestCase):
     os.remove(filename)
 
   @patch('builtins.input', side_effect=[5])
-  def test_execute_program_write(self, mock_input):
+  def test_execute_program_read(self, mock_input):
     self.uvsim.memory[0] = 1005 
     self.uvsim.execute_program(1)
     self.assertEqual(self.uvsim.memory[5], 5)
@@ -42,6 +42,120 @@ class TestUVSimulator(unittest.TestCase):
     with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
       self.uvsim.execute_program()
       self.assertEqual(mock_stdout.getvalue().strip(), "Program halted.")
+  
+  def test_execute_program_divide_by_zero(self):
+    self.uvsim.memory[0] = 3205
+    with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+      self.uvsim.execute_program()
+      self.assertIn("Error: Division by zero", mock_stdout.getvalue())
+
+  def test_load_program_from_file_invalid_file(self):
+    filename = "InvalidFile.txt"
+    output = StringIO()
+    sys.stdout = output
+    self.uvsim.load_program_from_file(filename)
+    printed_false = output.getvalue().strip()
+    sys.stdout = sys.__stdout__
+    expected_false = 'No file found.'
+    self.assertEqual(printed_false, expected_false)
+
+  @patch('builtins.input', value=45)
+  def test_opcode_10(self, mock_input):
+    self.uvsim.memory[0] = 1045
+    self.uvsim.execute_program()
+    operand = self.uvsim.memory[0] % 100
+    self.assertEqual(operand, 45)
+
+  def test_opcode_11(self):
+    self.uvsim.memory[0] = 1164
+    output = StringIO()
+    sys.stdout = output
+    self.uvsim.execute_program()
+    printed_output = output.getvalue().strip()
+    sys.stdout = sys.__stdout__
+    expected_output = "Output: 0"
+    self.assertEqual(printed_output, expected_output)
+
+  def test_opcode_20(self):
+    self.uvsim.memory[0] = 2024
+    self.uvsim.memory[24] = 27
+    self.uvsim.execute_program()
+    self.assertEqual(self.uvsim.accumulator, 27)
+
+  def test_opcode_21(self):
+    self.uvsim.memory[0] = 2112
+    self.uvsim.accumulator = 30
+    self.uvsim.execute_program()
+    self.assertEqual(self.uvsim.memory[12], 30)
+
+  def test_opcode_30(self):
+    self.uvsim.memory[0] = 3030
+    self.uvsim.memory[30] = 14
+    expected_add = self.uvsim.accumulator + self.uvsim.memory[30]
+    self.uvsim.execute_program()
+    self.assertEqual(self.uvsim.accumulator, expected_add)
+
+  def test_opcode_31(self):
+    self.uvsim.memory[0] = 3132
+    self.uvsim.memory[32] = 57
+    expected_sub = self.uvsim.accumulator - self.uvsim.memory[32]
+    self.uvsim.execute_program()
+    self.assertEqual(self.uvsim.accumulator, expected_sub)
+
+  def test_opcode_32(self):
+    self.uvsim.memory[0] = 3210
+    self.uvsim.memory[10] = 4
+    expected_div = self.uvsim.accumulator // self.uvsim.memory[10]
+    self.uvsim.execute_program()
+    self.assertEqual(self.uvsim.accumulator, expected_div)
+  
+  def test_opcode_32_divide_by_zero(self):
+    self.uvsim.memory[0] = 3223
+    self.uvsim.memory[23] = 0
+    output = StringIO()
+    sys.stdout = output
+    self.uvsim.execute_program()
+    zero_error = output.getvalue().strip()
+    sys.stdout = sys.__stdout__
+    expected_zero = "Error: Division by zero"
+    self.assertEqual(zero_error, expected_zero)
+
+  def test_opcode_33(self):
+    self.uvsim.memory[0] = 3333
+    self.uvsim.memory[33] = 33
+    expected_mult = self.uvsim.accumulator * self.uvsim.memory[33]
+    self.uvsim.execute_program()
+    self.assertEqual(self.uvsim.accumulator, expected_mult)
+
+  def test_opcode_40(self):
+    self.uvsim.memory[0] = 4005
+    operand = 5
+    self.uvsim.execute_program(operand)
+    self.assertEqual(self.uvsim.instruction_counter, operand)
+  
+  def test_opcode_41(self):
+    self.uvsim.memory[0] = 4175
+    self.uvsim.accumulator = -1
+    operand = 75
+    self.uvsim.execute_program(operand)
+    self.assertEqual(self.uvsim.instruction_counter, operand)
+
+  def test_opcode_42(self):
+    self.uvsim.memory[0] = 4202
+    self.uvsim.accumulator = 0
+    operand = 2
+    self.uvsim.execute_program(operand)
+    self.assertEqual(self.uvsim.instruction_counter, operand)
+  
+  def test_opcode_43(self):
+    self.uvsim.memory[0] = 4321
+    output = StringIO()
+    sys.stdout = output
+    self.uvsim.execute_program()
+    halt_output = output.getvalue().strip()
+    sys.stdout = sys.__stdout__
+    halt_expected = "Program halted."
+    self.assertEqual(halt_output, halt_expected)
 
 if __name__ == '__main__':
   unittest.main()
