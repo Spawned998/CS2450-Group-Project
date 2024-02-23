@@ -1,3 +1,4 @@
 *.log           #Ignore all files ending in .log
 **/logs         #Any directory, any level
 **/[Dd]ebug     #Debug or debug
+*.pyc           #Don't track pycache files
