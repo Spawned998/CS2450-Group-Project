@@ -1,0 +1,45 @@
+<MainGridLayout>
+    file:file
+    read:read
+
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        GridLayout:
+            cols:3
+
+            Label:
+                text: "File Input"
+            
+            TextInput:
+                id:file
+                multiline:False
+
+            Button:
+                text: "Submit"
+                width: .15
+                on_press: root.press_file()
+
+            Label:
+                text: "Read"
+            
+            TextInput:
+                id: read
+                multiline:False
+            
+            Button:
+                text: "Submit"
+                on_press: root.press_read()
+
+            Label:
+                text: "Write"
+            
+            Label:
+                text: ""
+
+        Label:
+            text: "Output: "
+            id: output
+            size_hint_y: None
+            text_size: self.width, None
+            height: self.texture_size[1]

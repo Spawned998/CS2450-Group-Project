@@ -1,5 +1,8 @@
 from math import e
 
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.properties import ObjectProperty
 
 class UVSimulator:
     def __init__(self):
@@ -17,24 +20,7 @@ class UVSimulator:
             return True
             
         except Exception as e:
-            print('No file found.')
             return False
-
-    def user_interface(self):
-        #gives the user interface
-        print('Welcome to UVSIM!')
-        while True:
-            file = input('\nEnter your BasicML filename(type exit to close): ')
-            if file.lower() == "exit":
-                break
-            else:
-                load_successful = self.load_program_from_file(file)
-            
-            if (load_successful):
-                self.execute_program()
-                return
-                #remove before turning in, this is for testing
-                #print(self.memory)
 
     def verify_input(self):
         #Verify the user enters a digit - reject all other inputs.
@@ -62,8 +48,8 @@ class UVSimulator:
         while (self.instruction_counter < max_iterations):
             instruction = self.memory[self.instruction_counter]
             if instruction == -99999:
-                print("End of file.")
-                break
+                return "End of file."
+                
 
             opcode = instruction // 100
             operand = instruction % 100
@@ -91,8 +77,8 @@ class UVSimulator:
                 if self.memory[operand] != 0:
                     self.accumulator //= self.memory[operand]
                 else:
-                    print("Error: Division by zero")
-                    break
+                    return "Error: Division by zero"
+                
 
             elif opcode == 33:  # MULTIPLY
                 self.accumulator *= self.memory[operand]
@@ -112,20 +98,53 @@ class UVSimulator:
                     continue
 
             elif opcode == 43:  # HALT
-                print("Program halted.")
-                break
+                return "Program halted."
+                
             
             else:
                 #Invalid opcode
-                print(f"Invalid opcode: {opcode} is not a valid command.")
-                print("Exiting program.")
-                break
+                return (f"Invalid opcode: {opcode} is not a valid command.\nExiting program.")
+                
 
             self.instruction_counter += 1
 
+sim = UVSimulator()
+
+class MainGridLayout(Widget):
+    file= ObjectProperty(None)
+    read = ObjectProperty(None)
+
+    def press_file(self):
+
+        file = self.ids.file.text
+
+        file_input = sim.load_program_from_file(file)
+        if file_input is True:
+            sim.execute_program()
+
+            self.ids.output.text= f'Output: {sim.memory}'
+            self.ids.file.text = ''
+        else:
+            self.ids.output.text = "File Not Found"
+            self.ids.file.text = ''
+
+    def press_read(self):
+        read = self.read.text
+
+        print(f'read: {read}')
+
+        self.ids.read.text= ""
+
+
+class SimApp(App):
+    def build(self):
+        return MainGridLayout()
+
 def main():
-    uvsim = UVSimulator()
-    uvsim.user_interface()
+    SimApp().run()
+    # mysim = UVSimulator()
+    # mysim.load_program_from_file("Test2.txt")
+    # mysim.execute_program()
 
 if __name__=="__main__":
     main()
