@@ -5,41 +5,111 @@
     GridLayout:
         cols: 1
         size: root.width, root.height
+        padding: 20
+
         GridLayout:
-            cols:3
+            cols:4
+            size_hint_y: None
+            height: 50
 
             Label:
-                text: "File Input"
+                text: "Input File: "
+                size_hint_x: None
+                width: 100
             
             TextInput:
                 id:file
                 multiline:False
+                size_hint_x: 5
 
             Button:
-                text: "Submit"
-                width: .15
+                id: run_button
+                text: "Run"
                 on_press: root.press_file()
 
+            Button:
+                id: help
+                text: "help"
+
+
+        GridLayout:
+            cols: 5
+            size_hint_y: None
+            height: 50
+
             Label:
-                text: "Read"
-            
+                text: "Read: "
+                size_hint_x: None
+                width: 100
+
             TextInput:
                 id: read
                 multiline:False
+                size_hint_x: 4
             
             Button:
+                id: submit_button
                 text: "Submit"
                 on_press: root.press_read()
 
             Label:
-                text: "Write"
+                text: "Write: "
             
             Label:
+                id: write
+                background_color: (1,1,1,1)
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                size_hint_x: 4
                 text: ""
+                text_size: self.width, None
+                height: self.texture_size[1]
+                
 
-        Label:
-            text: "Output: "
-            id: output
+        GridLayout:
+            cols: 4
             size_hint_y: None
-            text_size: self.width, None
-            height: self.texture_size[1]
+            height: 50
+
+            Label:
+                text: "Accumulator: "
+                size_hint_x: None
+                width: 100
+            
+            TextInput:
+                id: accumulator
+                multiline:False
+                size_hint_x: 2
+            
+            Label:
+                text: "Debug menu: "
+                width: 100
+            
+            Label:
+                id: debug
+                text: ""
+                size_hint_x: 4
+
+        GridLayout:
+            cols: 2
+            Label:
+                text: "Output: "
+                size_hint_x: None
+                width: 100
+
+            Label:
+                id: output
+                background_color: (1,1,1,1)
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: ""
+                text_size: self.width, None
+                height: self.texture_size[1]
