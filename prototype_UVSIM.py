@@ -42,11 +42,14 @@ class UVSimulator:
                 
         return user_entry
                 
+class ProgramController:
+    def __init__(self, simulator):
+        self.simulator = simulator
 
     def execute_program(self, max_iterations = 100):
-        # Execute BasicML program
-        while (self.instruction_counter < max_iterations):
-            instruction = self.memory[self.instruction_counter]
+    # Execute BasicML program
+        while (self.simulator.instruction_counter < max_iterations):
+            instruction = self.simulator.memory[self.simulator.instruction_counter]
             if instruction == -99999:
                 return "End of file."
                 
@@ -55,46 +58,46 @@ class UVSimulator:
             operand = instruction % 100
 
             if opcode == 10:  # READ
-                value = self.verify_input()
-                self.memory[operand] = value
+                value = self.simulator.verify_input()
+                self.simulator.memory[operand] = value
 
             elif opcode == 11:  # WRITE
-                print("Output:", self.memory[operand])
+                print("Output:", self.simulator.memory[operand])
 
             elif opcode == 20:  # LOAD
-                self.accumulator = self.memory[operand]
+                self.simulator.accumulator = self.simulator.memory[operand]
 
             elif opcode == 21:  # STORE
-                self.memory[operand] = self.accumulator
+                self.simulator.memory[operand] = self.simulator.accumulator
 
             elif opcode == 30:  # ADD
-                self.accumulator += self.memory[operand]
+                self.simulator.accumulator += self.simulator.memory[operand]
 
             elif opcode == 31:  # SUBTRACT
-                self.accumulator -= self.memory[operand]
+                self.simulator.accumulator -= self.simulator.memory[operand]
 
             elif opcode == 32:  # DIVIDE
-                if self.memory[operand] != 0:
-                    self.accumulator //= self.memory[operand]
+                if self.simulator.memory[operand] != 0:
+                    self.simulator.accumulator //= self.simulator.memory[operand]
                 else:
                     return "Error: Division by zero"
                 
 
             elif opcode == 33:  # MULTIPLY
-                self.accumulator *= self.memory[operand]
+                self.simulator.accumulator *= self.simulator.memory[operand]
 
             elif opcode == 40:  # BRANCH
-                self.instruction_counter = operand
+                self.simulator.instruction_counter = operand
                 continue
 
             elif opcode == 41:  # BRANCHNEG
-                if self.accumulator < 0:
-                    self.instruction_counter = operand
+                if self.simulator.accumulator < 0:
+                    self.simulator.instruction_counter = operand
                     continue
 
             elif opcode == 42:  # BRANCHZERO
-                if self.accumulator == 0:
-                    self.instruction_counter = operand
+                if self.simulator.accumulator == 0:
+                    self.simulator.instruction_counter = operand
                     continue
 
             elif opcode == 43:  # HALT
@@ -106,9 +109,10 @@ class UVSimulator:
                 return (f"Invalid opcode: {opcode} is not a valid command.\nExiting program.")
                 
 
-            self.instruction_counter += 1
+            self.simulator.instruction_counter += 1
 
 sim = UVSimulator()
+control = ProgramController(sim)
 
 class MainGridLayout(Widget):
     file= ObjectProperty(None)
@@ -120,7 +124,7 @@ class MainGridLayout(Widget):
 
         file_input = sim.load_program_from_file(file)
         if file_input is True:
-            sim.execute_program()
+            control.execute_program()
 
             self.ids.output.text= f'Output: {sim.memory}'
             self.ids.file.text = ''
