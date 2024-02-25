@@ -111,8 +111,8 @@ class ProgramController:
 
             self.simulator.instruction_counter += 1
 
-sim = UVSimulator()
-control = ProgramController(sim)
+simulator = UVSimulator()
+control = ProgramController(simulator)
 
 class MainGridLayout(Widget):
     file= ObjectProperty(None)
@@ -122,11 +122,11 @@ class MainGridLayout(Widget):
 
         file = self.ids.file.text
 
-        file_input = sim.load_program_from_file(file)
+        file_input = simulator.load_program_from_file(file)
         if file_input is True:
             control.execute_program()
 
-            self.ids.output.text= f'Output: {sim.memory}'
+            self.ids.output.text= f'Output: {simulator.memory}'
             self.ids.file.text = ''
         else:
             self.ids.output.text = "File Not Found"
