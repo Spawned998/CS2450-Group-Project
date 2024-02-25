@@ -159,7 +159,6 @@ class MainGridLayout(Widget):
             if control.done is True:
                 if control.output:
                     self.ids.output.text += str(control.output)
-                    print("accessed control.output")
                 self.ids.output.text += str(verified) + '\n' + str(simulator.memory)
                 self.ids.accumulator.text = str(simulator.accumulator)
                 self.ids.write.text = str(control.output)
