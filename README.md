@@ -25,3 +25,11 @@ The file may contain a "-99999" sentinel value as well, but is not necessary.
 
 # test.py
 Our unit tests to ensure everything continues to work correctly as we add more to the project.
+
+# class MainGridLayout
+To operate the GUI, simply run the python file. First, input a valid txt file to the "Input File: " text box, then click the "Run" button.
+If the inputted file is found to be invalid, the "Output: " text box will display the message "File Not Found".
+Then, the "Output: " should prompt you to "Please input command in Read Field". Here, you should input a valid memory assignment, such as "3009", to the "Read: " text box, then click the "Submit" button.
+The GUI will then run through "execute_program()", updating and outputting the memory value's to the "Output: " text box. 
+Once the maximum memory value is met, the "Output: " text box will output "Program halted." from "execute_program()", and the "Accumulator: " text box will be updated to display the accumulator value.
+Here you are safe to exit the program. 
