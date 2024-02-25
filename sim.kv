@@ -15,6 +15,7 @@
 
             Label:
                 text: "Input File: "
+
                 size_hint_x: None
                 width: 100
                 text_size: self.size
@@ -22,7 +23,8 @@
                 valign: "middle"
             
             TextInput:
-                id:file
+                id: file
+
                 multiline:False
                 size_hint_x: 5
 
@@ -43,6 +45,7 @@
 
             Label:
                 text: "Read: "
+
                 size_hint_x: None
                 width: 100
                 text_size: self.size
@@ -51,7 +54,8 @@
 
             TextInput:
                 id: read
-                multiline:False
+
+                multiline: False
                 size_hint_x: 4
             
             Button:
@@ -64,6 +68,8 @@
             
             Label:
                 id: write
+                text: ""
+
                 background_color: (1,1,1,1)
                 canvas.before:
                     Color:
@@ -71,8 +77,8 @@
                     Rectangle:
                         size: self.size
                         pos: self.pos
+                color: (0,0,0,1)
                 size_hint_x: 4
-                text: ""
                 text_size: self.width, None
                 height: self.texture_size[1]
                 
@@ -84,6 +90,7 @@
 
             Label:
                 text: "Accumulator: "
+
                 size_hint_x: None
                 width: 100
                 text_size: self.size
@@ -92,7 +99,8 @@
             
             TextInput:
                 id: accumulator
-                multiline:False
+
+                multiline: False
                 size_hint_x: 2
             
             Label:
@@ -102,12 +110,15 @@
             Label:
                 id: debug
                 text: ""
+
                 size_hint_x: 4
 
         GridLayout:
             cols: 2
+
             Label:
                 text: "Output: "
+
                 size_hint_x: None
                 width: 100
                 text_size: self.size
@@ -116,6 +127,8 @@
 
             Label:
                 id: output
+                text: ""
+
                 background_color: (1,1,1,1)
                 canvas.before:
                     Color:
@@ -123,6 +136,6 @@
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                text: ""
+                color: (0,0,0,1)
                 text_size: self.width, None
                 height: self.texture_size[1]
