@@ -26,10 +26,12 @@ The file may contain a "-99999" sentinel value as well, but is not necessary.
 # test.py
 Our unit tests to ensure everything continues to work correctly as we add more to the project.
 
-# class MainGridLayout
-To operate the GUI, simply run the python file. First, input a valid txt file to the "Input File: " text box, then click the "Run" button.
-If the inputted file is found to be invalid, the "Output: " text box will display the message "File Not Found".
-Then, the "Output: " should prompt you to "Please input command in Read Field". Here, you should input a valid memory assignment, such as "3009", to the "Read: " text box, then click the "Submit" button.
-The GUI will then run through "execute_program()", updating and outputting the memory value's to the "Output: " text box. 
-Once the maximum memory value is met, the "Output: " text box will output "Program halted." from "execute_program()", and the "Accumulator: " text box will be updated to display the accumulator value.
-Here you are safe to exit the program. 
+# GUI
+How to use: 
+Make sure kivy is installed on your python environment. 
+run prototype_UVSIM.py to open the Graphical User Interface.
+The GUI will have an Input file field, Read field, Write field, Accumulator field, and Output field. Help and Debug menu are just placeholders for now, but will be implemented in the future. 
+To begin, type the file name you want to run into the Input file field at the top, the press the Run button. It will run the program from the file and write the output to the Write field. The final accumulator will be displayed on the Accumulator field, and the whole memory or any errors encountered are displayed in the Output Field on the bottom. 
+If there are any READ commands in the file, you will be prompted to enter a BasicML command. Pressing Submit will continue execution of the file. 
+If the file contains muliple READ commands, you will need to enter a command into the Read field and press Submit each time. 
+Once the program finishes, you may enter a different file to run in the Input field or exit the program.
