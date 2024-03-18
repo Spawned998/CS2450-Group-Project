@@ -61,44 +61,24 @@ class ProgramController:
                     self.done = False
                     return "\nPlease input command in Read Field"
                     
-            elif opcode == 11:  # WRITE
-                self.output.append(self.simulator.memory[operand])
+            elif( opcode == 11 or
+                  opcode == 20 or
+                  opcode == 21):
+                self.load_store_execution(opcode, operand)
 
-            elif opcode == 20:  # LOAD
-                self.simulator.accumulator = self.simulator.memory[operand]
 
-            elif opcode == 21:  # STORE
-                self.simulator.memory[operand] = self.simulator.accumulator
-
-            elif opcode == 30:  # ADD
-                self.simulator.accumulator += self.simulator.memory[operand]
-
-            elif opcode == 31:  # SUBTRACT
-                self.simulator.accumulator -= self.simulator.memory[operand]
-
-            elif opcode == 32:  # DIVIDE
-                if self.simulator.memory[operand] != 0:
-                    self.simulator.accumulator //= self.simulator.memory[operand]
-                else:
-                    return "\nError: Division by zero"
+            elif (opcode == 30 or
+                  opcode == 31 or
+                  opcode == 32 or
+                  opcode == 33):
+                self.math_execution(opcode, operand)
                 
 
-            elif opcode == 33:  # MULTIPLY
-                self.simulator.accumulator *= self.simulator.memory[operand]
-
-            elif opcode == 40:  # BRANCH
-                self.simulator.instruction_counter = operand
-                continue
-
-            elif opcode == 41:  # BRANCHNEG
-                if self.simulator.accumulator < 0:
-                    self.simulator.instruction_counter = operand
-                    continue
-
-            elif opcode == 42:  # BRANCHZERO
-                if self.simulator.accumulator == 0:
-                    self.simulator.instruction_counter = operand
-                    continue
+            elif (opcode == 40 or
+                  opcode == 41 or
+                  opcode == 42 or
+                  opcode == 43):
+                self.branch_execution(opcode, operand)
 
             elif opcode == 43:  # HALT
                 return "\nProgram halted."
@@ -110,7 +90,57 @@ class ProgramController:
                 
             self.simulator.instruction_counter += 1
 
+    
+    def load_store_execution(self, opcode, operand):
+        if opcode == 10:  # READ
+                #exits the loop so the user can input in the read field
+                if self.read_control is True:
+                    self.simulator.memory[operand] = self.value
+                    self.read_control = False
+                    self.done = True
+                else:
+                    self.done = False
+                    return "\nPlease input command in Read Field"
+                    
+        elif opcode == 11:  # WRITE
+            self.output.append(self.simulator.memory[operand])
 
+        elif opcode == 20:  # LOAD
+            self.simulator.accumulator = self.simulator.memory[operand]
+
+        elif opcode == 21:  # STORE
+            self.simulator.memory[operand] = self.simulator.accumulator
+
+
+    def math_execution(self, opcode, operand):
+        if opcode == 30:  # ADD
+                self.simulator.accumulator += self.simulator.memory[operand]
+
+        elif opcode == 31:  # SUBTRACT
+            self.simulator.accumulator -= self.simulator.memory[operand]
+
+        elif opcode == 32:  # DIVIDE
+            if self.simulator.memory[operand] != 0:
+                self.simulator.accumulator //= self.simulator.memory[operand]
+            else:
+                return "\nError: Division by zero"
+
+        elif opcode == 33:  # MULTIPLY
+            self.simulator.accumulator *= self.simulator.memory[operand]
+
+
+    def branch_execution(self, opcode, operand):
+        if opcode == 40:  # BRANCH
+            self.simulator.instruction_counter = operand
+            
+
+        elif opcode == 41:  # BRANCHNEG
+            if self.simulator.accumulator < 0:
+                self.simulator.instruction_counter = operand
+
+        elif opcode == 42:  # BRANCHZERO
+            if self.simulator.accumulator == 0:
+                self.simulator.instruction_counter = operand
 
 control = ProgramController(simulator)
 
@@ -150,13 +180,29 @@ class MainGridLayout(Widget):
 
     def press_read(self):
         #when Gui submit button is pressed, input is verified and execution continues from where it left off
+        
+        #Pull data entered from user
         self.read = self.ids.read.text
+
+        #Verify entered data is in correct format.
         input_verification = simulator.verify_input(self.read) 
+
+        #If input is verified
         if input_verification is True:
+
+            #Pass back read value to controller
             control.value = int(self.read)
+
+            #Set read_control to True to give back loop control
             control.read_control = True
+
+            #Resumes execute program
             verified = control.execute_program()
+
+            #If gui is ready to output
             if control.done is True:
+
+                #If controller.output is true
                 if control.output:
                     self.ids.output.text += str(control.output)
                 self.ids.output.text += str(verified) + '\n' + str(simulator.memory)
@@ -167,6 +213,8 @@ class MainGridLayout(Widget):
             else:
                 self.ids.output.text += str(verified)
             #right now, I'm having trouble making it continue where it left off
+                
+        #If input is not verified.
         else:
             self.ids.output.text += "\nInput Invalid. Try Again"
             return
