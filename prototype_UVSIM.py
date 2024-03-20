@@ -212,8 +212,7 @@ class MainGridLayout(Widget):
 
             else:
                 self.ids.output.text += str(verified)
-            #right now, I'm having trouble making it continue where it left off
-                
+
         #If input is not verified.
         else:
             self.ids.output.text += "\nInput Invalid. Try Again"
