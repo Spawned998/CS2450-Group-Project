@@ -4,7 +4,7 @@ from io import StringIO
 import sys
 import os
 
-from prototype_UVSIM import UVSimulator
+from prototype_UVSIM import UVSimulator, ProgramController, MainGridLayout, SimApp
 
 class TestUVSimulator(unittest.TestCase):
   def setUp(self):
@@ -157,6 +157,57 @@ class TestUVSimulator(unittest.TestCase):
     operand = 2
     self.uvsim.execute_program(operand) 
     self.assertEqual(self.uvsim.instruction_counter, operand)
+
+class TestMainGridLayout(unittest.TestCase):
+    def setUp(self):
+        self.main_layout = MainGridLayout()
+
+    def test_press_file_loads_program(self):
+        # Mock the file input
+        self.main_layout.ids.file.text = "test_program.txt"
+        
+        # Mock the execution of program
+        with patch.object(SimApp, 'build') as mock_build:
+            self.main_layout.press_file()
+            mock_build.assert_called_once()
+
+    def test_press_read_with_valid_input(self):
+        # Mock the read input
+        self.main_layout.ids.read.text = "1234"
+        
+        # Mock the execution of program
+        with patch.object(SimApp, 'build') as mock_build:
+            self.main_layout.press_read()
+            mock_build.assert_called_once()
+
+    def test_press_read_with_invalid_input(self):
+        # Mock the invalid read input
+        self.main_layout.ids.read.text = "abcd"
+        
+        # Mock the output
+        with patch('sys.stdout', new=StringIO()) as mock_stdout:
+            self.main_layout.press_read()
+            self.assertIn("Input Invalid. Try Again", mock_stdout.getvalue())
+
+    def test_press_primary_color_with_valid_input(self):
+        # Mock the primary color input
+        self.main_layout.ids.primary_color_input.text = "255, 0, 0"
+        
+        # Mock the primary color setting
+        with patch.object(self.main_layout.ids.background.canvas.before.children[0], 'rgba') as mock_rgba:
+            self.main_layout.press_primary_color()
+            mock_rgba.assert_called_once_with((1.0, 0.0, 0.0, 1))
+
+    def test_press_secondary_color_with_valid_input(self):
+        # Mock the secondary color input
+        self.main_layout.ids.secondary_color_input.text = "0, 255, 0"
+        
+        # Mock the secondary color setting for each button
+        buttons = ["run_button", "help", "submit_button", "primary_color_button", "secondary_color_button"]
+        with patch.object(self.main_layout.ids, 'background_color') as mock_background_color:
+            for button_id in buttons:
+                self.main_layout.press_secondary_color()
+                mock_background_color.assert_called_with((0.0, 1.0, 0.0, 1))
     
 if __name__ == '__main__':
   unittest.main()
