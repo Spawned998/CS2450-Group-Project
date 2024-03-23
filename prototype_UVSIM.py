@@ -77,6 +77,8 @@ class ProgramController:
                   opcode == 33):
                 print("math")
                 self.math_execution(opcode, operand)
+                if self.math_execution(opcode, operand):
+                    return self.math_execution(opcode, operand)
                 
 
             elif (opcode == 40 or
@@ -84,6 +86,8 @@ class ProgramController:
                   opcode == 42):
                 print("branch")
                 self.branch_execution(opcode, operand)
+                if self.branch_execution(opcode, operand):
+                    return self.branch_execution(opcode, operand)
 
             elif opcode == 43:  # HALT
                 return "\nProgram halted."
@@ -106,7 +110,6 @@ class ProgramController:
                 self.done = True
             else:
                 self.done = False
-                print("hey, it was false, why isnt this stopping?")
                 return "\nPlease input command in Read Field"
                     
         elif opcode == 11:  # WRITE
@@ -213,10 +216,9 @@ class MainGridLayout(Widget):
                 #If controller.output is true
                 if control.output:
                     self.ids.output.text += str(control.output)
-                    print("is this where None comes from")
                 self.ids.output.text += str(verified) + '\n' + str(simulator.memory)
                 self.ids.write.text = str(control.output)
-                self.ids.file.text = ''
+                self.ids.read.text = ''
 
             else:
                 self.ids.output.text += str(verified)
