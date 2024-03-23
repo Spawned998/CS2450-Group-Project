@@ -52,33 +52,37 @@ class ProgramController:
             opcode = instruction // 100
             operand = instruction % 100
 
-            if opcode == 10:  # READ
-                #exits the loop so the user can input in the read field
-                if self.read_control is True:
-                    self.simulator.memory[operand] = self.value
-                    self.read_control = False
-                    self.done = True
-                else:
-                    self.done = False
-                    return "\nPlease input command in Read Field"
+            # if opcode == 10:  # READ
+            #     #exits the loop so the user can input in the read field
+            #     if self.read_control is True:
+            #         self.simulator.memory[operand] = self.value
+            #         self.read_control = False
+            #         self.done = True
+            #     else:
+            #         self.done = False
+            #         return "\nPlease input command in Read Field"
                     
-            elif( opcode == 11 or
-                  opcode == 20 or
-                  opcode == 21):
-                self.load_store_execution(opcode, operand)
+            if( opcode == 10 or
+                opcode == 11 or
+                opcode == 20 or
+                opcode == 21):
+                print("load store")
+                if self.load_store_execution(opcode, operand):
+                    return self.load_store_execution(opcode, operand)
 
 
             elif (opcode == 30 or
                   opcode == 31 or
                   opcode == 32 or
                   opcode == 33):
+                print("math")
                 self.math_execution(opcode, operand)
                 
 
             elif (opcode == 40 or
                   opcode == 41 or
-                  opcode == 42 or
-                  opcode == 43):
+                  opcode == 42):
+                print("branch")
                 self.branch_execution(opcode, operand)
 
             elif opcode == 43:  # HALT
@@ -94,14 +98,16 @@ class ProgramController:
     
     def load_store_execution(self, opcode, operand):
         if opcode == 10:  # READ
-                #exits the loop so the user can input in the read field
-                if self.read_control is True:
-                    self.simulator.memory[operand] = self.value
-                    self.read_control = False
-                    self.done = True
-                else:
-                    self.done = False
-                    return "\nPlease input command in Read Field"
+            #exits the loop so the user can input in the read field
+            print(self.read_control)
+            if self.read_control is True:
+                self.simulator.memory[operand] = self.value
+                self.read_control = False
+                self.done = True
+            else:
+                self.done = False
+                print("hey, it was false, why isnt this stopping?")
+                return "\nPlease input command in Read Field"
                     
         elif opcode == 11:  # WRITE
             self.output.append(self.simulator.memory[operand])
@@ -171,7 +177,6 @@ class MainGridLayout(Widget):
             result = control.execute_program()
             if control.done is True:
                 self.ids.output.text += str(result) + '\n' + str(simulator.memory)
-                self.ids.accumulator.text = str(simulator.accumulator)
                 self.ids.write.text = str(control.output)
                 self.ids.file.text = ''
 
@@ -208,8 +213,8 @@ class MainGridLayout(Widget):
                 #If controller.output is true
                 if control.output:
                     self.ids.output.text += str(control.output)
+                    print("is this where None comes from")
                 self.ids.output.text += str(verified) + '\n' + str(simulator.memory)
-                self.ids.accumulator.text = str(simulator.accumulator)
                 self.ids.write.text = str(control.output)
                 self.ids.file.text = ''
 
@@ -227,10 +232,13 @@ class MainGridLayout(Widget):
         try:
             # Split the RGB input string into individual components
             r, g, b = map(int, primary_color_text.split(','))
+            if (r > 255 or g > 255 or b > 255) or (r < 1 or g < 1 or g < 1):
+                raise OverflowError
             # Normalize the RGB values to the range of 0-1
             r /= 255
             g /= 255
             b /= 255
+            
             #set primary color
             self.ids.background.canvas.before.children[0].rgba = (r, g, b, 1)
             #reset input field
@@ -239,6 +247,8 @@ class MainGridLayout(Widget):
         except ValueError:
             self.ids.output.text += "\nInvalid primary color input. Please enter comma-separated RGB values."
 
+        except OverflowError:
+            self.ids.output.text += "\nInvalid primary color input. Please enter a number between 1 and 255"
     def press_secondary_color(self):
         # Get the RGB input from the text color input field
         buttons = ["run_button", "help", "submit_button", "primary_color_button", "secondary_color_button"]
@@ -254,6 +264,7 @@ class MainGridLayout(Widget):
             for button_id in buttons:
                 button = self.ids[button_id]
                 button.background_color = (r, g, b, 1)
+            self.ids.secondary_color_input.text = ""
         except ValueError:
             # Handle invalid input
             self.ids.output.text += "\nInvalid secondary color input. Please enter comma-separated RGB values."
