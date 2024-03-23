@@ -223,29 +223,26 @@ class MainGridLayout(Widget):
 
     def press_primary_color(self):
         # Get the RGB input from the background color input field
-        print(self.ids.primary_color_input.text)
-        primary_input = self.ids.primary_color_input.text
-        primary_color_text = primary_input.strip()
+        primary_color_text = self.ids.primary_color_input.text.strip()
         try:
-            print(primary_color_text)
             # Split the RGB input string into individual components
             r, g, b = map(int, primary_color_text.split(','))
             # Normalize the RGB values to the range of 0-1
             r /= 255
             g /= 255
             b /= 255
-            with self.ids.background:
-                Color(r, g, b, 1)
-                Rectangle(pos=self.pos, size=self.size)
+            #set primary color
+            self.ids.background.canvas.before.children[0].rgba = (r, g, b, 1)
+            #reset input field
+            self.ids.primary_color_input.text = ""
+
         except ValueError:
-            # Handle invalid input
             self.ids.output.text += "\nInvalid primary color input. Please enter comma-separated RGB values."
-            print(primary_color_text)
-            self.ids.output.text += f"\n{primary_color_text}"
 
     def press_secondary_color(self):
         # Get the RGB input from the text color input field
-        secondary_color_text = self.secondary_color_input.strip()
+        buttons = ["run_button", "help", "submit_button", "primary_color_button", "secondary_color_button"]
+        secondary_color_text = self.ids.secondary_color_input.text.strip()
         try:
             # Split the RGB input string into individual components
             r, g, b = map(int, secondary_color_text.split(','))
@@ -254,7 +251,9 @@ class MainGridLayout(Widget):
             g /= 255
             b /= 255
             # Set the text color
-            self.ids.button.background_color = (r, g, b, 1)
+            for button_id in buttons:
+                button = self.ids[button_id]
+                button.background_color = (r, g, b, 1)
         except ValueError:
             # Handle invalid input
             self.ids.output.text += "\nInvalid secondary color input. Please enter comma-separated RGB values."

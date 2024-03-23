@@ -2,29 +2,26 @@
     color: (200/255, 200/255, 200/255, 1)
 
 <Button>
-    id: button
+    id: mybutton
+    background_color: (1,1,1,1)
     color: (100/255, 100/255, 100/255, 1)
     background_normal: ''
-    background_color: (1,1,1,1)
 
 <MainGridLayout>
     file:file
     read:read
     primary_color_input:primary_color_input
     secondary_color_input:secondary_color_input
-    primary_color_button:primary_color_button
-    secondary_color_button:secondary_color_button
-
-
-    canvas.before:
-        id: background
-        Color: 
-            rgba: 35/255, 93/255, 56/255, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
 
     GridLayout:
+        id: background
+        canvas.before:
+            Color:
+                rgba: 35/255, 93/255, 56/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
         cols: 1
         size: root.width, root.height
         padding: 10
@@ -112,6 +109,12 @@
 
             Label:
                 text: "Primary Color: "
+                
+                size_hint_x: None
+                width: 100
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
             
             TextInput:
                 id: primary_color_input
