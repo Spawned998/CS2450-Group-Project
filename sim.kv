@@ -1,12 +1,29 @@
+<Label>
+    color: (200/255, 200/255, 200/255, 1)
+
+<Button>
+    id: button
+    color: (100/255, 100/255, 100/255, 1)
+    background_normal: ''
+    background_color: (1,1,1,1)
+
 <MainGridLayout>
     file:file
     read:read
+    primary_color_input:primary_color_input
+    secondary_color_input:secondary_color_input
+    primary_color_button:primary_color_button
+    secondary_color_button:secondary_color_button
+
+
     canvas.before:
+        id: background
         Color: 
-            rgba: 76/255, 114/255, 29/255, 1
+            rgba: 35/255, 93/255, 56/255, 1
         Rectangle:
             pos: self.pos
             size: self.size
+
     GridLayout:
         cols: 1
         size: root.width, root.height
@@ -87,36 +104,39 @@
                 text_size: self.width, None
                 height: self.texture_size[1]
                 
-
+        #color buttons
         GridLayout:
-            cols: 4
+            cols: 6
             size_hint_y: None
             height: 50
 
             Label:
-                text: "Accumulator: "
-
-                size_hint_x: None
-                width: 100
-                text_size: self.size
-                halign: "left"
-                valign: "middle"
+                text: "Primary Color: "
             
             TextInput:
-                id: accumulator
+                id: primary_color_input
 
                 multiline: False
-                size_hint_x: 2
             
-            Label:
-                text: "Debug menu: "
-                width: 100
-            
-            Label:
-                id: debug
-                text: ""
+            Button:
+                id: primary_color_button
 
-                size_hint_x: 4
+                text: "Apply"
+                on_press: root.press_primary_color()
+            
+            Label:
+                text: "Secondary Color: "
+            
+            TextInput:
+                id: secondary_color_input
+
+                multiline: False
+            
+            Button:
+                id: secondary_color_button
+
+                text: "Apply"
+                on_press: root.press_secondary_color()
 
         GridLayout:
             cols: 2
