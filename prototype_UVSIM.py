@@ -237,6 +237,7 @@ class MainGridLayout(Widget):
 
             else:
                 self.ids.output.text += str(verified)
+                self.ids.write.text = str(control.output)
                 self.ids.read.text = ''
 
         #If input is not verified.
@@ -297,8 +298,16 @@ class MainGridLayout(Widget):
         int_list = self.ids.edit.text.split(" ")
         for i in range(99):
             try:
-                simulator.memory[i] = int(int_list[i])
-                print("change")
+                if (int(int_list[i]) < 1000) or (int(int_list[i]) >= 10000):
+                    if int(int_list[i]) == -99999:
+                        simulator.memory[i] = int(int_list[i])
+                    elif int(int_list[i]) == 0:
+                        simulator.memory[i] = int(int_list[i])
+                    else:
+                        self.ids.output.text += "\nInvalid value in editor"
+                        return False
+                else:
+                    simulator.memory[i] = int(int_list[i])
         
             except ValueError:
                 return False
