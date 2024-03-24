@@ -164,9 +164,13 @@ class MainGridLayout(Widget):
 
     def press_file(self):
         '''this method activates when the run button is clicked'''
-        self.file = self.ids.file.text #this grabs the data from the field
+        if not self.file or (self.ids.file.text != self.file):
+            self.file = self.ids.file.text #this grabs the data from the field
 
-        file_input = simulator.load_program_from_file(self.file)
+            file_input = simulator.load_program_from_file(self.file)
+        else:
+            file_input = True
+
         control.read_control=False
         control.done= True
         simulator.instruction_counter = 0
@@ -175,11 +179,31 @@ class MainGridLayout(Widget):
             #checks fileinput
             result = control.execute_program()
             if control.done is True:
-                self.ids.output.text += str(result) + '\n' + str(simulator.memory)
+                self.ids.output.text += str(result)
                 self.ids.write.text = str(control.output)
 
             else:
                 self.ids.output.text += str(result)
+        else:
+            self.ids.output.text = "\nFile Not Found"
+
+    def load_into_editor(self):
+        #clear editor field
+        self.ids.edit.text = ""
+        
+        #load file
+        if not self.file or (self.ids.file.text != self.file):
+            self.file = self.ids.file.text #this grabs the data from the field
+
+            file_input = simulator.load_program_from_file(self.file)
+        else:
+            file_input = True
+
+        if file_input is True:
+            #populate the editor
+            for item in simulator.memory:
+                self.ids.edit.text += f"{str(item)} "
+        
         else:
             self.ids.output.text = "\nFile Not Found"
 
@@ -207,15 +231,13 @@ class MainGridLayout(Widget):
             #If gui is ready to output
             if control.done is True:
 
-                #If controller.output is true
-                if control.output:
-                    self.ids.output.text += str(control.output)
-                self.ids.output.text += str(verified) + '\n' + str(simulator.memory)
+                self.ids.output.text += str(verified)
                 self.ids.write.text = str(control.output)
                 self.ids.read.text = ''
 
             else:
                 self.ids.output.text += str(verified)
+                self.ids.read.text = ''
 
         #If input is not verified.
         else:
@@ -282,18 +304,7 @@ class MainGridLayout(Widget):
                 return False
         print(simulator.memory)
 
-    def load_into_editor(self):
-        #load file
-        self.file = self.ids.file.text #this grabs the data from the field
 
-        file_input = simulator.load_program_from_file(self.file)
-        if file_input is True:
-            #populate the editor
-            for item in simulator.memory:
-                self.ids.edit.text += f"{str(item)} "
-        
-        else:
-            self.ids.output.text = "\nFile Not Found"
 
 
 class SimApp(App):
