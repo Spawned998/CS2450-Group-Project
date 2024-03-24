@@ -177,17 +177,11 @@ class MainGridLayout(Widget):
             if control.done is True:
                 self.ids.output.text += str(result) + '\n' + str(simulator.memory)
                 self.ids.write.text = str(control.output)
-                self.ids.file.text = ''
-
-                #populate the editor
-                for item in simulator.memory:
-                    self.ids.edit.text += f"{str(item)}\n"
 
             else:
                 self.ids.output.text += str(result)
         else:
             self.ids.output.text = "\nFile Not Found"
-            self.ids.file.text = ''
 
     def press_read(self):
         #when Gui submit button is pressed, input is verified and execution continues from where it left off
@@ -251,6 +245,7 @@ class MainGridLayout(Widget):
 
         except OverflowError:
             self.ids.output.text += "\nInvalid primary color input. Please enter a number between 1 and 255"
+
     def press_secondary_color(self):
         # Get the RGB input from the text color input field
         buttons = ["run_button", "help", "submit_button", "primary_color_button", "secondary_color_button"]
@@ -258,6 +253,8 @@ class MainGridLayout(Widget):
         try:
             # Split the RGB input string into individual components
             r, g, b = map(int, secondary_color_text.split(','))
+            if (r > 255 or g > 255 or b > 255) or (r < 1 or g < 1 or g < 1):
+                raise OverflowError
             # Normalize the RGB values to the range of 0-1
             r /= 255
             g /= 255
@@ -270,6 +267,34 @@ class MainGridLayout(Widget):
         except ValueError:
             # Handle invalid input
             self.ids.output.text += "\nInvalid secondary color input. Please enter comma-separated RGB values."
+
+        except OverflowError:
+            self.ids.output.text += "\nInvalid primary color input. Please enter a number between 1 and 255"
+
+    def press_save(self):
+        int_list = self.ids.edit.text.split(" ")
+        for i in range(99):
+            try:
+                simulator.memory[i] = int(int_list[i])
+                print("change")
+        
+            except ValueError:
+                return False
+        print(simulator.memory)
+
+    def load_into_editor(self):
+        #load file
+        self.file = self.ids.file.text #this grabs the data from the field
+
+        file_input = simulator.load_program_from_file(self.file)
+        if file_input is True:
+            #populate the editor
+            for item in simulator.memory:
+                self.ids.edit.text += f"{str(item)} "
+        
+        else:
+            self.ids.output.text = "\nFile Not Found"
+
 
 class SimApp(App):
     def build(self):

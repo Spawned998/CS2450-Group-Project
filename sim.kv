@@ -54,7 +54,8 @@
 
             Button:
                 id: help
-                text: "help"
+                text: "Load in Editor"
+                on_press: root.load_into_editor()
 
 
         GridLayout:
@@ -169,7 +170,9 @@
                 height: self.texture_size[1]
 
         GridLayout:
-            cols: 1
+            cols: 2
+            height: 50
+            size_hint_y: None
 
             Label:
                 text: "Editor:"
@@ -180,13 +183,16 @@
                 halign: "left"
                 valign: "top"
 
-        ScrollView:
-            size_hint_y: None
-            height: minimum_height
-            bar_width: 10
+            Button:
+                id: save
+                text: "Save Edit"
+                on_press: root.press_save()
 
+                height: 50
+                size_hint_y: None
+
+        GridLayout:
+            cols: 1
             TextInput:
                 id: edit
-                hint_text: "Memory Loads Here"
                 text: ""
-                multiline: True
