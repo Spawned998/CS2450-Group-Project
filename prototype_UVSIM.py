@@ -311,9 +311,6 @@ class MainGridLayout(Widget):
         
             except ValueError:
                 return False
-        print(simulator.memory)
-
-
 
 
 class SimApp(App):

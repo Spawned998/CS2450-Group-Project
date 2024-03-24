@@ -8,10 +8,14 @@ How to use:
 Simply run the python file. All commands are given using the commmand line. Currently, you will be prompted to give a file to read. Enter "exit" to close the program. Test1.txt and Test2.txt are included in this folder for convenient testing. Make sure your file path is correct when entering the file. 
 
 Using the color picker: 
-Enter 3 numbers between 1 and 255, all seperated by commas, into the primary or secondary color fields, and click the apply button next to the field to change the colors.
+Enter 3 rgb values between 1 and 255, all seperated by commas, into the primary or secondary color fields, and click the apply button next to the field to change the colors. 
 Here is an example: 
 Primary Color: 155,155,155
-Clicking apply will change the primary color to gray.
+Clicking apply in this example will change the primary color to gray.
+
+Using the editor:
+Enter the file name, and click the Load into File button. Every value in memory is loaded in as a space seperated value. You can edit the values individually, as well as copy, paste, and cut. 
+Make sure the values are always seperated by one space and are valid 4 digit commands! Press the Save File button when you are finished editing to save the edits. 
 
 Currently implemented file commands:
 Read = 10 - Prompts user to input a command from command line.
