@@ -7,6 +7,12 @@ Our product. It is a virtual machine that reads a file and executes the commands
 How to use: 
 Simply run the python file. All commands are given using the commmand line. Currently, you will be prompted to give a file to read. Enter "exit" to close the program. Test1.txt and Test2.txt are included in this folder for convenient testing. Make sure your file path is correct when entering the file. 
 
+Using the color picker: 
+Enter 3 numbers between 1 and 255, all seperated by commas, into the primary or secondary color fields, and click the apply button next to the field to change the colors.
+Here is an example: 
+Primary Color: 155,155,155
+Clicking apply will change the primary color to gray.
+
 Currently implemented file commands:
 Read = 10 - Prompts user to input a command from command line.
 Write = 11 - Displays a word from the specified memory location onto the screen. The specified memory location is the last 2 digits of a word.

@@ -66,7 +66,6 @@ class ProgramController:
                 opcode == 11 or
                 opcode == 20 or
                 opcode == 21):
-                print("load store")
                 if self.load_store_execution(opcode, operand):
                     return self.load_store_execution(opcode, operand)
 
@@ -75,7 +74,6 @@ class ProgramController:
                   opcode == 31 or
                   opcode == 32 or
                   opcode == 33):
-                print("math")
                 self.math_execution(opcode, operand)
                 if self.math_execution(opcode, operand):
                     return self.math_execution(opcode, operand)
@@ -84,7 +82,6 @@ class ProgramController:
             elif (opcode == 40 or
                   opcode == 41 or
                   opcode == 42):
-                print("branch")
                 self.branch_execution(opcode, operand)
                 if self.branch_execution(opcode, operand):
                     return self.branch_execution(opcode, operand)
@@ -103,7 +100,6 @@ class ProgramController:
     def load_store_execution(self, opcode, operand):
         if opcode == 10:  # READ
             #exits the loop so the user can input in the read field
-            print(self.read_control)
             if self.read_control is True:
                 self.simulator.memory[operand] = self.value
                 self.read_control = False
@@ -182,6 +178,10 @@ class MainGridLayout(Widget):
                 self.ids.output.text += str(result) + '\n' + str(simulator.memory)
                 self.ids.write.text = str(control.output)
                 self.ids.file.text = ''
+
+                #populate the editor
+                for item in simulator.memory:
+                    self.ids.edit.text += f"{str(item)}\n"
 
             else:
                 self.ids.output.text += str(result)

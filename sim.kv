@@ -167,3 +167,26 @@
                 color: (0,0,0,1)
                 text_size: self.width, None
                 height: self.texture_size[1]
+
+        GridLayout:
+            cols: 1
+
+            Label:
+                text: "Editor:"
+
+                size_hint_x: None
+                width: 100
+                text_size: self.size
+                halign: "left"
+                valign: "top"
+
+        ScrollView:
+            size_hint_y: None
+            height: minimum_height
+            bar_width: 10
+
+            TextInput:
+                id: edit
+                hint_text: "Memory Loads Here"
+                text: ""
+                multiline: True
