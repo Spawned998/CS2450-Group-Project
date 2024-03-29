@@ -179,7 +179,9 @@ class MainGridLayout(Widget):
             #checks fileinput
             result = control.execute_program()
             if control.done is True:
-                self.ids.output.text += str(result)
+                for output in control.output:
+                    self.ids.output.text += "\n" + str(result)
+                self.ids.output.text += "\n" + str(result)
                 self.ids.write.text = str(control.output)
 
             else:
