@@ -10,11 +10,30 @@ class UVSimulator:
         self.memory = [0] * 100
         self.accumulator = 0
         self.instruction_counter = 0
+        self.filename = ""
 
-    def load_program_from_file(self, filename):
+    def save_program_to_file(self):
+        #Open file and write out
+        try:
+            with open(self.filename, 'w') as file:
+                for memory in self.memory:
+
+                    #Write each memory value on a new line
+                    file.write(f"{str(memory)}\n")
+
+        except IOError as e:
+            print("Write error occurred: ", e)
+
+        finally:
+            print(f"File {self.filename} closing.")
+
+
+
+    def load_program_from_file(self, passed_filename):
+        self.filename = passed_filename
         # Load BasicML program from a text file into memory starting at location 00
         try:
-            with open(filename, 'r') as file:
+            with open(self.filename, 'r') as file:
                 program = [int(line.strip()) for line in file]
             self.memory[:len(program)] = program
             return True
@@ -297,22 +316,39 @@ class MainGridLayout(Widget):
             self.ids.output.text += "\nInvalid primary color input. Please enter a number between 1 and 255"
 
     def press_save(self):
+
+        #Pull commands from the editor and store in a list
         int_list = self.ids.edit.text.split(" ")
+
+        #Iterate through list
         for i in range(99):
             try:
+                #Check if value < 1000 or value >= 10000 
                 if (int(int_list[i]) < 1000) or (int(int_list[i]) >= 10000):
+
+                    #If value is -99999, store in memory
                     if int(int_list[i]) == -99999:
                         simulator.memory[i] = int(int_list[i])
+
+                    #If value is 0, store in memory
                     elif int(int_list[i]) == 0:
                         simulator.memory[i] = int(int_list[i])
+
+                    #Otherwise invalid value
                     else:
                         self.ids.output.text += "\nInvalid value in editor"
                         return False
+                
+                #If value > 1000 and value < 10000, store in memory
                 else:
                     simulator.memory[i] = int(int_list[i])
         
+            #If any errors are thrown, return false
             except ValueError:
                 return False
+            
+        #No errors thrown: write out to file
+        simulator.save_program_to_file()
 
 
 class SimApp(App):
