@@ -327,7 +327,7 @@ class MainGridLayout(Widget):
         #Iterate through list
         for i in range(249):
             try:
-                #Check if value < 1000 or value >= 10000 
+                #Check if value < 1000 or value >= 100000 
                 if (int(int_list[i]) < 1000) or (int(int_list[i]) >= 100000):
 
                     #If value is -99999, store in memory
@@ -343,7 +343,7 @@ class MainGridLayout(Widget):
                         self.ids.output.text += "\nInvalid value in editor"
                         return False
                 
-                #If value > 1000 and value < 10000, store in memory
+                #If value > 1000 and value < 100000, store in memory
                 else:
                     simulator.memory[i] = int(int_list[i])
         
