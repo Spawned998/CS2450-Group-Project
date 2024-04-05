@@ -2,6 +2,7 @@ from math import e
 
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty
 
 class UVSimulator:
@@ -350,10 +351,18 @@ class MainGridLayout(Widget):
         #No errors thrown: write out to file
         simulator.save_program_to_file()
 
+    def press_new_tab(self):
+        pass
+
+class SimTabs(TabbedPanel):
+    def __init__(self, **kwargs):
+        super(SimTabs, self).__init__(**kwargs)
+        self.default_tab_text = 'Tab 1'
+        self.default_tab_content = MainGridLayout()
 
 class SimApp(App):
     def build(self):
-        return MainGridLayout()
+        return SimTabs()
 
 def main():
     SimApp().run()
