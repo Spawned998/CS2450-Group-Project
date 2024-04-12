@@ -2,7 +2,7 @@
 A repository for the CS2450 Software Engineering Group Project - Spring 2024
 
 # prototype UVSIM.py
-Our product. It is a virtual machine that reads a file and executes the commands in the file. It has a 100-word memory and interprets BasicML. Words are 4 digits long.
+Our product. It is a virtual machine that reads a file and executes the commands in the file. It has a 100-word memory and interprets BasicML. Files can contain 4 digit commands or 6 digit commands.
 
 How to use: 
 Simply run the python file. All commands are given using the commmand line. Currently, you will be prompted to give a file to read. Enter "exit" to close the program. Test1.txt and Test2.txt are included in this folder for convenient testing. Make sure your file path is correct when entering the file. 
