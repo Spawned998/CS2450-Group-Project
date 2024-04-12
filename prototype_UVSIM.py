@@ -2,7 +2,7 @@ from math import e
 
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.uix.tabbedpanel import TabbedPanel
+from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
 from kivy.properties import ObjectProperty
 
 class UVSimulator:
@@ -28,8 +28,6 @@ class UVSimulator:
         finally:
             print(f"File {self.filename} closing.")
 
-
-
     def load_program_from_file(self, passed_filename):
         self.filename = passed_filename
         # Load BasicML program from a text file into memory starting at location 00
@@ -52,7 +50,7 @@ class UVSimulator:
             return True
         return False
         
-simulator = UVSimulator()
+#simulator = UVSimulator()
 
 class ProgramController:
     def __init__(self, simulator):
@@ -61,6 +59,7 @@ class ProgramController:
         self.read_control = False #used to stop program to grab read input from gui
         self.value = 0 #used to store read input from gui
         self.done = True #used to stop gui from outputting prematurely
+
 
     def execute_program(self, max_iterations = 100):
     # Execute BasicML program
@@ -71,16 +70,6 @@ class ProgramController:
                 
             opcode = instruction // 100
             operand = instruction % 100
-
-            # if opcode == 10:  # READ
-            #     #exits the loop so the user can input in the read field
-            #     if self.read_control is True:
-            #         self.simulator.memory[operand] = self.value
-            #         self.read_control = False
-            #         self.done = True
-            #     else:
-            #         self.done = False
-            #         return "\nPlease input command in Read Field"
                     
             if( opcode == 10 or
                 opcode == 11 or
@@ -168,13 +157,16 @@ class ProgramController:
             if self.simulator.accumulator == 0:
                 self.simulator.instruction_counter = operand
 
-control = ProgramController(simulator)
+#control = ProgramController(simulator)
 
 class MainGridLayout(Widget):
     file = ObjectProperty(None)
     read = ObjectProperty(None)
 
-    def __init__(self, **kwargs):
+    #ObjectProperty to hold callback reference to SimTabs instance
+    sim_tabs = ObjectProperty(None)
+
+    def __init__(self, passed_simulator, passed_control, **kwargs):
         super().__init__(**kwargs)
         self.file = ""
         self.read = ""
@@ -182,27 +174,30 @@ class MainGridLayout(Widget):
         self.primary_color_input = ""
         self.secondary_color_input = ""
 
+        self.simulator = passed_simulator
+        self.control = passed_control
+
     def press_file(self):
         '''this method activates when the run button is clicked'''
         if not self.file or (self.ids.file.text != self.file):
             self.file = self.ids.file.text #this grabs the data from the field
 
-            file_input = simulator.load_program_from_file(self.file)
+            file_input = self.simulator.load_program_from_file(self.file)
         else:
             file_input = True
 
-        control.read_control=False
-        control.done= True
-        simulator.instruction_counter = 0
+        self.control.read_control=False
+        self.control.done= True
+        self.simulator.instruction_counter = 0
 
         if file_input is True:
             #checks fileinput
-            result = control.execute_program()
-            if control.done is True:
-                for output in control.output:
+            result = self.control.execute_program()
+            if self.control.done is True:
+                for output in self.control.output:
                     self.ids.output.text += "\n" + str(result)
                 self.ids.output.text += "\n" + str(result)
-                self.ids.write.text = str(control.output)
+                self.ids.write.text = str(self.control.output)
 
             else:
                 self.ids.output.text += str(result)
@@ -217,13 +212,13 @@ class MainGridLayout(Widget):
         if not self.file or (self.ids.file.text != self.file):
             self.file = self.ids.file.text #this grabs the data from the field
 
-            file_input = simulator.load_program_from_file(self.file)
+            file_input = self.simulator.load_program_from_file(self.file)
         else:
             file_input = True
 
         if file_input is True:
             #populate the editor
-            for item in simulator.memory:
+            for item in self.simulator.memory:
                 self.ids.edit.text += f"{str(item)} "
         
         else:
@@ -236,30 +231,30 @@ class MainGridLayout(Widget):
         self.read = self.ids.read.text
 
         #Verify entered data is in correct format.
-        input_verification = simulator.verify_input(self.read) 
+        input_verification = self.simulator.verify_input(self.read) 
 
         #If input is verified
         if input_verification is True:
 
             #Pass back read value to controller
-            control.value = int(self.read)
+            self.control.value = int(self.read)
 
             #Set read_control to True to give back loop control
-            control.read_control = True
+            self.control.read_control = True
 
             #Resumes execute program
-            verified = control.execute_program()
+            verified = self.control.execute_program()
 
             #If gui is ready to output
-            if control.done is True:
+            if self.control.done is True:
 
                 self.ids.output.text += str(verified)
-                self.ids.write.text = str(control.output)
+                self.ids.write.text = str(self.control.output)
                 self.ids.read.text = ''
 
             else:
                 self.ids.output.text += str(verified)
-                self.ids.write.text = str(control.output)
+                self.ids.write.text = str(self.control.output)
                 self.ids.read.text = ''
 
         #If input is not verified.
@@ -329,11 +324,11 @@ class MainGridLayout(Widget):
 
                     #If value is -99999, store in memory
                     if int(int_list[i]) == -99999:
-                        simulator.memory[i] = int(int_list[i])
+                        self.simulator.memory[i] = int(int_list[i])
 
                     #If value is 0, store in memory
                     elif int(int_list[i]) == 0:
-                        simulator.memory[i] = int(int_list[i])
+                        self.simulator.memory[i] = int(int_list[i])
 
                     #Otherwise invalid value
                     else:
@@ -342,23 +337,69 @@ class MainGridLayout(Widget):
                 
                 #If value > 1000 and value < 10000, store in memory
                 else:
-                    simulator.memory[i] = int(int_list[i])
+                    self.simulator.memory[i] = int(int_list[i])
         
             #If any errors are thrown, return false
             except ValueError:
                 return False
             
         #No errors thrown: write out to file
-        simulator.save_program_to_file()
+        self.simulator.save_program_to_file()
 
     def press_new_tab(self):
-        pass
+
+        #Callback to SimTabs instance
+        self.sim_tabs.add_tab()
+        
 
 class SimTabs(TabbedPanel):
+    #List to hold UVSim instances
+    num_instances = 0
+
     def __init__(self, **kwargs):
         super(SimTabs, self).__init__(**kwargs)
-        self.default_tab_text = 'Tab 1'
-        self.default_tab_content = MainGridLayout()
+
+        #Create default sim instance
+        default_sim = UVSimulator()
+
+        #Create default control instance
+        default_control = ProgramController(default_sim)
+
+        #Create view tab instance passing in default_sim, default_control, and Sim_Tabs callback reference
+        default_instance = MainGridLayout(default_sim, default_control, sim_tabs = self)
+
+        #Set tab text to display default
+        self.default_tab_text = 'Default'
+        
+        #Increase num_instances
+        self.num_instances += 1
+
+        #Display default instance
+        self.default_tab_content = default_instance
+
+    
+    def add_tab(self):
+
+        #Create new sim instance
+        new_sim = UVSimulator()
+
+        #Create new control_instance
+        new_control = ProgramController(new_sim)
+
+        #Create new view tab instance
+        new_layout = MainGridLayout(new_sim, new_control, sim_tabs = self)
+
+        #increase num_instances
+        self.num_instances += 1
+
+        #Display instance number in tab
+        new_tab = TabbedPanelItem(text = f"{self.num_instances}")
+        
+        #Store layout into tab content
+        new_tab.content = new_layout
+
+        #Add tab to SimTabs instance
+        self.add_widget(new_tab)
 
 class SimApp(App):
     def build(self):

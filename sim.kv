@@ -28,7 +28,7 @@
         spacing: 10
 
         GridLayout:
-            cols:4
+            cols:5
             size_hint_y: None
             height: 50
 
@@ -45,17 +45,25 @@
                 id: file
 
                 multiline:False
-                size_hint_x: 5
+                size_hint_x: 3
 
             Button:
                 id: run_button
                 text: "Run"
+                size_hint_x: 1
                 on_press: root.press_file()
 
             Button:
                 id: help
                 text: "Load in Editor"
+                size_hint_x: 1
                 on_press: root.load_into_editor()
+
+            Button:
+                id: new_tab
+                text: "New Tab"
+                size_hint_x: 1
+                on_press: root.press_new_tab()
 
 
         GridLayout:
