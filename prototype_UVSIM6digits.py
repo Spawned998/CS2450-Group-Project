@@ -34,11 +34,19 @@ class UVSimulator:
         try:
             with open(self.filename, 'r') as file:
                 program = [int(line.strip()) for line in file]
+
+            # Check if the program contains both 4 and 6 digit words
+            contains_4_digit = any(len(str(word)) == 4 for word in program)
+            contains_6_digit = any(len(str(word)) == 6 for word in program)
+
+            if contains_4_digit and contains_6_digit:
+                return False, "Files cannot have both 4 digit and 6 digit words."
+            
             self.memory[:len(program)] = program
-            return True
+            return True, None
             
         except Exception as e:
-            return False
+            return False, str(e)
 
     def verify_input(self, entry):
         #Verify the user enters a 4 or 6 digit value- reject all other inputs.
@@ -190,12 +198,13 @@ class MainGridLayout(Widget):
         if not self.file or (self.ids.file.text != self.file):
             self.file = self.ids.file.text #this grabs the data from the field
 
-            file_input = simulator.load_program_from_file(self.file)
+            file_input, error_message = simulator.load_program_from_file(self.file)
         else:
             file_input = True
+            error_message = None
 
-        control.read_control=False
-        control.done= True
+        control.read_control = False
+        control.done = True
         simulator.instruction_counter = 0
 
         if file_input is True:
@@ -210,7 +219,7 @@ class MainGridLayout(Widget):
             else:
                 self.ids.output.text += str(result)
         else:
-            self.ids.output.text = "\nFile Not Found"
+            self.ids.output.text = error_message if error_message else "Unknown error occurred."
 
     def load_into_editor(self):
         #clear editor field
