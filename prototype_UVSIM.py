@@ -228,6 +228,7 @@ class MainGridLayout(Widget):
 
         self.control.read_control=False
         self.control.done= True
+        self.control.output = []
         self.simulator.instruction_counter = 0
 
         if file_input is True:
