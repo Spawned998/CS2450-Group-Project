@@ -5,7 +5,8 @@ A repository for the CS2450 Software Engineering Group Project - Spring 2024
 Our product. It is a virtual machine that reads a file and executes the commands in the file. It has a 100-word memory and interprets BasicML. Files can contain 4 digit commands or 6 digit commands.
 
 How to use: 
-Simply run the python file. All commands are given using the commmand line. Currently, you will be prompted to give a file to read. Enter "exit" to close the program. Test1.txt and Test2.txt are included in this folder for convenient testing. Make sure your file path is correct when entering the file. 
+Run the python file prototype_UVSIM.py. This will open up a GUI. In the input File input field, enter the file path to the file you want to run. It will be able to run a file from anywhere in the computer, provided the file path is correct. For example, if the file is in your C: drive, enter C:\FolderYourFileIsIn\FileYouWantToRun.txt into the input field and press the Run button to run the file. If the program requires you to input any commands, it will prompt you from the output field. Enter a valid command into the Read input field, and press submit. Pressing Submit will continue file execution. Anything the program writes out will be in the Write field. Any errors will appear in the Output field, and the program will notify you when it is finished executing in the Output Field. 
+If you wish to open multiple files at the same time, pressing the New Tab button will open a new instance of the simulator in a new tab. Each tab will be able to run parallel to each other with no interference. 
 
 Using the color picker: 
 Enter 3 rgb values between 1 and 255, all seperated by commas, into the primary or secondary color fields, and click the apply button next to the field to change the colors. 
@@ -40,7 +41,7 @@ Our unit tests to ensure everything continues to work correctly as we add more t
 How to use: 
 Make sure kivy is installed on your python environment. 
 run prototype_UVSIM.py to open the Graphical User Interface.
-The GUI will have an Input file field, Read field, Write field, Accumulator field, and Output field. Help and Debug menu are just placeholders for now, but will be implemented in the future. 
+The GUI will have an Input file field, Read field, Write field, Accumulator field, and Output field. 
 To begin, type the file name you want to run into the Input file field at the top, the press the Run button. It will run the program from the file and write the output to the Write field. The final accumulator will be displayed on the Accumulator field, and the whole memory or any errors encountered are displayed in the Output Field on the bottom. 
 If there are any READ commands in the file, you will be prompted to enter a BasicML command. Pressing Submit will continue execution of the file. 
 If the file contains muliple READ commands, you will need to enter a command into the Read field and press Submit each time. 
