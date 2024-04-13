@@ -2,7 +2,7 @@
 A repository for the CS2450 Software Engineering Group Project - Spring 2024
 
 # prototype UVSIM.py
-Our product. It is a virtual machine that reads a file and executes the commands in the file. It has a 100-word memory and interprets BasicML. Files can contain 4 digit commands or 6 digit commands.
+Our product. It is a virtual machine that reads a file and executes the commands in the file. It has a 250-word memory and interprets BasicML. Files can contain 4 digit commands or 6 digit commands.
 
 How to use: 
 Run the python file prototype_UVSIM.py. This will open up a GUI. In the input File input field, enter the file path to the file you want to run. It will be able to run a file from anywhere in the computer, provided the file path is correct. For example, if the file is in your C: drive, enter C:\FolderYourFileIsIn\FileYouWantToRun.txt into the input field and press the Run button to run the file. If the program requires you to input any commands, it will prompt you from the output field. Enter a valid command into the Read input field, and press submit. Pressing Submit will continue file execution. Anything the program writes out will be in the Write field. Any errors will appear in the Output field, and the program will notify you when it is finished executing in the Output Field. 
