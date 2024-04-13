@@ -125,7 +125,6 @@ class ProgramController:
                   opcode == 31 or
                   opcode == 32 or
                   opcode == 33):
-                self.math_execution(opcode, operand)
                 if self.math_execution(opcode, operand):
                     return self.math_execution(opcode, operand)
                 
@@ -133,7 +132,6 @@ class ProgramController:
             elif (opcode == 40 or
                   opcode == 41 or
                   opcode == 42):
-                self.branch_execution(opcode, operand)
                 if self.branch_execution(opcode, operand):
                     return self.branch_execution(opcode, operand)
 
@@ -278,6 +276,9 @@ class MainGridLayout(Widget):
         #If input is verified
         if input_verification is True:
 
+            #Clear any prior messages in output field
+            self.ids.output.text = ""
+
             #Pass back read value to controller
             self.control.value = int(self.read)
 
@@ -301,7 +302,7 @@ class MainGridLayout(Widget):
 
         #If input is not verified.
         else:
-            self.ids.output.text += "\nInput Invalid. Try Again"
+            self.ids.output.text += f"\n{self.read} is Invalid. Please enter a 6 digit number."
             return
 
     def press_primary_color(self):
@@ -359,10 +360,10 @@ class MainGridLayout(Widget):
         int_list = self.ids.edit.text.split(" ")
 
         #Iterate through list
-        for i in range(99):
+        for i in range(249):
             try:
-                #Check if value < 1000 or value >= 10000 
-                if (int(int_list[i]) < 1000) or (int(int_list[i]) >= 10000):
+                #Check if value is outside valid opcode range
+                if (int(int_list[i]) < 10000) or (int(int_list[i]) >= 44000):
 
                     #If value is -99999, store in memory
                     if int(int_list[i]) == -99999:
@@ -377,7 +378,7 @@ class MainGridLayout(Widget):
                         self.ids.output.text += "\nInvalid value in editor"
                         return False
                 
-                #If value > 1000 and value < 10000, store in memory
+                #If value > 10000 and value < 10000, store in memory
                 else:
                     self.simulator.memory[i] = int(int_list[i])
         
