@@ -8,7 +8,7 @@ from kivy.properties import ObjectProperty
 class UVSimulator:
     def __init__(self):
         # Initialize UVSim components
-        self.memory = [0] * 100
+        self.memory = [0] * 250
         self.accumulator = 0
         self.instruction_counter = 0
         self.filename = ""
@@ -28,21 +28,62 @@ class UVSimulator:
         finally:
             print(f"File {self.filename} closing.")
 
+    def six_digit_conversion(self):
+        #Track if any words were changed
+        words_updated = False
+
+        #Iterate through each memory location
+        for i in range(len(self.memory)):
+
+            #If the length of the word is 4 digits
+            if len(str(self.memory[i])) == 4:
+
+                #For testing
+                print(f"Converting to six-digit.")
+
+                #Separate opcode & operand
+                opcode = str(self.memory[i] // 100)
+                operand = str(self.memory[i] % 100)
+
+                #Append a leading 0 to operand
+                new_operand = "{:03d}".format(int(operand))
+
+                #For testing
+                print(f"New operand: {new_operand}")
+
+                #Write new 6 digit word back to same memory location
+                self.memory[i] = int(opcode + new_operand)
+
+                #Flag that words were changed
+                words_updated = True
+        
+        return words_updated
+                
+
     def load_program_from_file(self, passed_filename):
         self.filename = passed_filename
+
+        need_to_write_out_file = False
         # Load BasicML program from a text file into memory starting at location 00
         try:
             with open(self.filename, 'r') as file:
                 program = [int(line.strip()) for line in file]
             self.memory[:len(program)] = program
+
+            #Convert any 4-digit file to six digit file
+            need_to_write_out_file = self.six_digit_conversion()
+
+            if(need_to_write_out_file == True):
+                #Write out to file with new values
+                self.save_program_to_file()
             return True
             
         except Exception as e:
             return False
 
     def verify_input(self, entry):
-        #Verify the user enters a 4 digit value- reject all other inputs.
-        if len(entry) == 4:
+        #Verify the user enters a 6 digit value- reject all other inputs.
+        if len(entry) == 6:
             try:
                 int(entry)
             except Exception as e:
@@ -61,15 +102,16 @@ class ProgramController:
         self.done = True #used to stop gui from outputting prematurely
 
 
-    def execute_program(self, max_iterations = 100):
+    def execute_program(self, max_iterations = 250):
     # Execute BasicML program
         while (self.simulator.instruction_counter < max_iterations):
             instruction = self.simulator.memory[self.simulator.instruction_counter]
             if instruction == -99999:
                 return "\nEnd of file."
                 
-            opcode = instruction // 100
-            operand = instruction % 100
+            elif len(str(instruction)) == 5:
+                opcode = instruction // 1000
+                operand = instruction % 1000
                     
             if( opcode == 10 or
                 opcode == 11 or
