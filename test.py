@@ -26,7 +26,7 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim.load_program_from_file(filename)
     printed_false = output.getvalue().strip()
     sys.stdout = sys.__stdout__
-    expected_false = 'No file found.'
+    expected_false = 'File Not Found'
     self.assertEqual(printed_false, expected_false)
     
   @patch('builtins.input', side_effect=["Test1.txt"])
@@ -208,6 +208,53 @@ class TestMainGridLayout(unittest.TestCase):
             for button_id in buttons:
                 self.main_layout.press_secondary_color()
                 mock_background_color.assert_called_with((0.0, 1.0, 0.0, 1))
+
+class TestUVSimulatorWordLength(unittest.TestCase):
+    def setUp(self):
+        self.uvsim = UVSimulator()
+
+    def test_load_program_from_file_with_six_digit_words(self):
+        # Create a test file with six-digit words
+        filename = "Test_Load_Six_Digit_Words.txt"
+        program_content = "001010\n002009\n004300"
+        with open(filename, "w") as file:
+            file.write(program_content)
+        
+        # Load the program from the test file
+        self.uvsim.load_program_from_file(filename)
+        
+        # Check if the memory is loaded correctly
+        expected_memory = [10010, 20009, 43000] + [0] * 247  # Expected memory with 6-digit words
+        self.assertEqual(self.uvsim.memory, expected_memory)
+        
+        # Clean up
+        os.remove(filename)
+
+    def test_load_program_from_file_old_format(self):
+        # Create a test file with four-digit words
+        filename = "Test_Load_Four_Digit_Words.txt"
+        program_content = "1010\n2009\n4300"
+        with open(filename, "w") as file:
+            file.write(program_content)
+        
+        # Load the program from the test file
+        self.uvsim.load_program_from_file(filename)
+        
+        # Check if the memory is loaded correctly
+        expected_memory = [10010, 20009, 43000] + [0] * 247  # Expected memory with 6-digit words
+        self.assertEqual(self.uvsim.memory, expected_memory)
+        
+        # Clean up
+        os.remove(filename)
+
+    def test_execute_program_with_six_digit_math_operations(self):
+        # Load a program with six-digit math operations
+        self.uvsim.memory[0] = 301010  # ADD operation with a six-digit operand
+        self.uvsim.memory[10] = 500000  # Operand with six digits
+        self.uvsim.execute_program()
+        
+        # Check if the ADD operation is executed correctly
+        self.assertEqual(self.uvsim.accumulator, 501010)
     
 if __name__ == '__main__':
   unittest.main()
