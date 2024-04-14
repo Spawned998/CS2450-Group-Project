@@ -26,7 +26,7 @@ class TestUVSimulator(unittest.TestCase):
     self.uvsim.load_program_from_file(filename)
     printed_false = output.getvalue().strip()
     sys.stdout = sys.__stdout__
-    expected_false = 'No file found.'
+    expected_false = 'File Not Found'
     self.assertEqual(printed_false, expected_false)
     
   @patch('builtins.input', side_effect=["Test1.txt"])
@@ -224,7 +224,7 @@ class TestUVSimulatorWordLength(unittest.TestCase):
         self.uvsim.load_program_from_file(filename)
         
         # Check if the memory is loaded correctly
-        expected_memory = [1010, 2009, 4300] + [0] * 247  # Expected memory with 6-digit words
+        expected_memory = [10010, 20009, 43000] + [0] * 247  # Expected memory with 6-digit words
         self.assertEqual(self.uvsim.memory, expected_memory)
         
         # Clean up
@@ -241,7 +241,7 @@ class TestUVSimulatorWordLength(unittest.TestCase):
         self.uvsim.load_program_from_file(filename)
         
         # Check if the memory is loaded correctly
-        expected_memory = [1010, 2009, 4300] + [0] * 247  # Expected memory with 6-digit words
+        expected_memory = [10010, 20009, 43000] + [0] * 247  # Expected memory with 6-digit words
         self.assertEqual(self.uvsim.memory, expected_memory)
         
         # Clean up
